@@ -17,9 +17,25 @@ class Film
   end
 
   def self.all()
-    sql = " SELECT * FROM"
+    sql = " SELECT * FROM films ;"
+    result = SqlRunner.run(sql)
+    return result.map { |film| Film.new(film) }
   end
 
+  def update()
+    sql = "UPDATE films SET (title, ticket_price) VALUES ('#{@title}', '#{@ticket_price}') WHERE id = #{id} ;"
+    SqlRunner.run(sql)
+  end
 
+  def self.delete_all()
+    sql = "DELETE FROM films ;"
+    SqlRunner.run(sql)
+  end
+
+  def customers()
+    sql = "SELECT customers.* FROM customers INNER JOIN tickets ON customers.id = tickets.customer_id WHERE tickets.film_id = #{@id} ; "
+    result = SqlRunner.run(sql)
+    return result.map { |customer| customer['name'] }
+  end
 
 end
